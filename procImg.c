@@ -3,8 +3,8 @@
   | -----------------------                                                 |
   | Programa para processamento de uma imagem em niveis de cinza.           |
   |                                                                         |
-  | Criado por Luiz Eduardo da Silva.                                       |
-  | Manipulado por Maria José Silva de Carvalho                             |
+  | Criado:.....  Luiz Eduardo da Silva                                     |
+  | Manipulado:.  Maria José Silva de Carvalho                              |
   |         funções criadas (gradiente, erosao, dilatacao2, dilatacao,      |
   |             equalizaHistograma, calculaHistograma, mediana, convolucao) |
   +-------------------------------------------------------------------------+*/
@@ -34,6 +34,7 @@ int aloca_memo(imagem *I, int nl, int nc) {
     if (*I) return TRUE;
     else return FALSE;
 }
+
 int desaloca_memo(imagem *I) {
     free(*I);
 }
@@ -165,6 +166,7 @@ void grava_imagem_pgm(imagem I, char *nome, int nl, int nc, int mn) {
     }
     fclose(arq);
 }
+
 void msg(char *s) {
     printf("\nPROCESSAMENTO de uma imagem qualquer");
     printf("\n-------------------------------");
@@ -174,13 +176,13 @@ void msg(char *s) {
 }
 
 void negativo(imagem I, imagem O, int nl, int nc, int mn) {
-    int mask[3][3] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     int i, j;
     for (i = 1; i < nl - 1; i++)
         for (j = 1; j < nc - 1; j++) {
             O[i * nc + j] = 255 - I[i * nc + j];
         }
 }
+
 void convolucao(imagem I, imagem O, int nl, int nc, int mn) {
     int mask[3][3] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
     int i, j;
@@ -195,13 +197,14 @@ void convolucao(imagem I, imagem O, int nl, int nc, int mn) {
             O[i * nc + j] = O[i * nc + j] > 20 ? 0 : 255;
         }
 }
+
 void mediana(imagem I, imagem O, int nl, int nc) {
     int i, j, MAX = 9, CENTRO = (MAX / 2);
     int vetor [MAX];
     for (i = 1; i <= nl - 1; i++)
         for (j = 1; j <= nc - 1; j++) {
             int y, x, cont = 0, aux, k, m;
-
+            //verifica os vizinhos do ponto analisado e os coloca em um vetor
             for (y = i - 1; y < i + 2; y++)
                 for (x = j - 1; x < j + 2; x++) {
                     vetor [cont++] = I[y * nc + x];
@@ -211,6 +214,8 @@ void mediana(imagem I, imagem O, int nl, int nc) {
                     for (x = 0; x < 3; x++)
                         vetor[cont++] = I[(i + y - 1) * nc + j + x - 1];
              */
+
+            //ordena o vetor
             for (k = 0; k < MAX - 1; k++) {
                 for (m = k + 1; m < MAX; m++)
                     if (vetor[k] > vetor[m]) {
@@ -219,12 +224,14 @@ void mediana(imagem I, imagem O, int nl, int nc) {
                         vetor[m] = aux;
                     }
             }
+            //o ponto processado recebe o ponto médio do vetor
             O[i * nc + j] = vetor[CENTRO];
         }
 }
+
 void calculaHistograma(imagem I, histograma H, int nl, int nc, int mn) {
     int i, j;
-    for (i = 0; i < mn+1; i++)
+    for (i = 0; i < mn + 1; i++)
         H[i] = 0;
 
     for (i = 0; i < nl; i++)
@@ -232,6 +239,7 @@ void calculaHistograma(imagem I, histograma H, int nl, int nc, int mn) {
             H[I[i * nc + j]]++;
         }
 }
+
 void equalizaHistograma(imagem I, imagem O, histograma H, int nl, int nc, int mn) {
     int i, j, MAX = mn + 1;
     calculaHistograma(I, H, nl, nc, mn);
@@ -254,9 +262,7 @@ void equalizaHistograma(imagem I, imagem O, histograma H, int nl, int nc, int mn
         }
     }
 }
-void tDFourier() {
 
-}
 void dilatacao(imagem I, imagem O, int nl, int nc, int mn) {
     int i, j;
     for (i = 1; i < nl - 1; i++)
@@ -270,27 +276,34 @@ void dilatacao(imagem I, imagem O, int nl, int nc, int mn) {
             O[i * nc + j] = max;
         }
 }
+
 void dilatacao2(imagem I, imagem O, int nl, int nc, int mn) {
     int i, j;
-    struct{
+
+    struct {
         int x, y;
-    } viz[4] = {{-2,0},{-1,0},{1,0},{2,0}};
+    } viz[4] = {
+        {-2, 0},
+        {-1, 0},
+        {1, 0},
+        {2, 0}};
     for (i = 1; i < nl - 1; i++)
         for (j = 1; j < nc - 1; j++) {
             int k, max = -1;
-            for(k=0;k<4;k++){
-                    if (max < I[(i + viz[k].x) * nc + j + viz[k].y]) {
-                        max = I[(i + viz[k].x) * nc + j + viz[k].y];
-                    }
+            for (k = 0; k < 4; k++) {
+                if (max < I[(i + viz[k].x) * nc + j + viz[k].y]) {
+                    max = I[(i + viz[k].x) * nc + j + viz[k].y];
+                }
             }
             O[i * nc + j] = max;
         }
 }
+
 void erosao(imagem I, imagem O, int nl, int nc, int mn) {
     int i, j;
     for (i = 1; i < nl - 1; i++)
         for (j = 1; j < nc - 1; j++) {
-            int y, x, min = mn+1;
+            int y, x, min = mn + 1;
             for (y = -1; y < 2; y++)
                 for (x = -1; x < 2; x++)
                     if (min > I[(i + y) * nc + j + x]) {
@@ -299,13 +312,14 @@ void erosao(imagem I, imagem O, int nl, int nc, int mn) {
             O[i * nc + j] = min;
         }
 }
+
 void gradiente(imagem I, imagem O, int nl, int nc, int mn) {
     int i, j;
     for (i = 1; i < nl - 1; i++)
         for (j = 1; j < nc - 1; j++) {
-            int y, x, min = mn+1, max=-1;
+            int y, x, min = mn + 1, max = -1;
             for (y = -1; y < 2; y++)
-                for (x = -1; x < 2; x++){
+                for (x = -1; x < 2; x++) {
                     if (min > I[(i + y) * nc + j + x]) {
                         min = I[(i + y) * nc + j + x];
                     }
@@ -338,21 +352,21 @@ int main(int argc, char *argv[]) {
             calculaHistograma(In, Histo, nl, nc, mn);
             //tom de maior frequencia
             maior = 0;
-            for (i = 0; i < mn+1; i++)
+            for (i = 0; i < mn + 1; i++)
                 if (Histo[i] > Histo[maior]) {
                     maior = i;
                 }
             printf("Tom: %d | Frequência: %d\n", maior, Histo[maior]);
 
-            equalizaHistograma(In, Out, Histo, nl, nc, mn);
+//            equalizaHistograma(In, Out, Histo, nl, nc, mn);
 //            negativo(In, Out, nl, nc, mn);
 //            convolucao(In, Out, nl, nc, mn);
-//            mediana(In, Out, nl, nc);
+            mediana(In, Out, nl, nc);
 //            dilatacao(In, Out, nl, nc, mn);
 //            dilatacao2(In, Out, nl, nc, mn);
 //            erosao(In, Out, nl, nc, mn);
 //            gradiente(In, Out, nl, nc, mn);
-          
+
             strcpy(nome, argv[1]);
             strcat(nome, "-modificada.pgm");
             grava_imagem_pgm(Out, nome, nl, nc, mn);
