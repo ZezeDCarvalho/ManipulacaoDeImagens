@@ -2,10 +2,9 @@
   | PROCESSAMENTO DE IMAGEM -                                               |
   | -----------------------                                                 |
   | Programa para processamento de uma imagem em niveis de cinza.           |
-  |                                                                         |
   | Criado:.....  Luiz Eduardo da Silva                                     |
   | Manipulado:.  Maria José Silva de Carvalho                              |
-  |         funções criadas (gradiente, erosao, dilatacao2, dilatacao,      |
+  |             funções criadas (gradiente, erosao, dilatacao2, dilatacao,  |
   |             equalizaHistograma, calculaHistograma, mediana, convolucao) |
   +-------------------------------------------------------------------------+*/
 
@@ -23,7 +22,7 @@ typedef int histograma [256];
 
 /*+-------------------------------------------------------------------------+
   | Rotinas para ALOCAR e DESALOCAR dinamicamente espaco de memoria para um |
-  | vetor monodimensional que armazenara' a imagem.                         |
+  | vetor monodimensional que armazenara a imagem.                          |
   | PARAMETROS:                                                             |
   | I  = Endereco do vetor (ponteiro de inteiros).                          |
   | nl = Numero de linhas.                                                  |
@@ -41,11 +40,11 @@ int desaloca_memo(imagem *I) {
 
 /*+-------------------------------------------------------------------------+
   | Apresenta informacoes sobre um arquivo de imagem.                       |
-  | Parametros:                                                             |
-  |   nome = nome fisico do arquivo de imagem.                              |
-  |   nl   = numero de linhas da imagem.                                    |
-  |   nc   = numero de colunas da imagem.                                   |
-  |   mn   = maximo nivel de cinza da imagem.                               |
+  | PARAMETROS:                                                             |
+  |     nome = nome fisico do arquivo de imagem.                            |
+  |     nl   = numero de linhas da imagem.                                  |
+  |     nc   = numero de colunas da imagem.                                 |
+  |     mn   = maximo nivel de cinza da imagem.                             |
   +-------------------------------------------------------------------------+*/
 void info_imagem(char *nome, int nl, int nc, int mn) {
     printf("\nINFORMACOES SOBRE A IMAGEM:");
@@ -76,11 +75,11 @@ void info_imagem(char *nome, int nl, int nc, int mn) {
   | Lin 5 em diante: valores de cinza da imagem.                            |
   |                                                                         |
   | PARAMETROS:                                                             |
-  | nome = nome do arquivo (entra).                                         |
-  | I    = ponteiro para o vetor imagem (retorna).                          |
-  | nl   = numero de linhas da imagem (retorna).                            |
-  | nc   = numero de colunas da imagem (retorna).                           |
-  | mn   = maximo nivel de cinza (retorna).                                 |
+  |     nome = nome do arquivo (entra).                                     |
+  |     I    = ponteiro para o vetor imagem (retorna).                      |
+  |     nl   = numero de linhas da imagem (retorna).                        |
+  |     nc   = numero de colunas da imagem (retorna).                       |
+  |     mn   = maximo nivel de cinza (retorna).                             |
   +-------------------------------------------------------------------------+*/
 int le_imagem_pgm(char *nome, imagem *I, int *nl, int *nc, int *mn) {
     int i, j, k, LIMX, LIMY, MAX_NIVEL;
@@ -136,11 +135,11 @@ int le_imagem_pgm(char *nome, imagem *I, int *nl, int *nc, int *mn) {
 /*+-------------------------------------------------------------------------+
   | Rotina que grava o arquivo da imagem em formato PGM ASCII.              |
   | PARAMETROS:                                                             |
-  | I    = ponteiro para o vetor imagem (entra).                            |
-  | nome = nome do arquivo (entra).                                         |
-  | nl   = numero de linhas (entra).                                        |
-  | nc   = numero de colunas (entra).                                       |
-  | mn   = maximo nivel de cinza (entra).                                   |
+  |     I    = ponteiro para o vetor imagem (entra).                        |
+  |     nome = nome do arquivo (entra).                                     |
+  |     nl   = numero de linhas (entra).                                    |
+  |     nc   = numero de colunas (entra).                                   |
+  |     mn   = maximo nivel de cinza (entra).                               |
   +-------------------------------------------------------------------------+*/
 void grava_imagem_pgm(imagem I, char *nome, int nl, int nc, int mn) {
     int i, j, x, k, valores_por_linha;
@@ -206,24 +205,22 @@ void mediana(imagem I, imagem O, int nl, int nc) {
             int y, x, cont = 0, aux, k, m;
             //verifica os vizinhos do ponto analisado e os coloca em um vetor
             for (y = i - 1; y < i + 2; y++)
-                for (x = j - 1; x < j + 2; x++) {
+                for (x = j - 1; x < j + 2; x++)
                     vetor [cont++] = I[y * nc + x];
-                }
-            /*
-                for (y = 0; y < 3; y++)
-                    for (x = 0; x < 3; x++)
-                        vetor[cont++] = I[(i + y - 1) * nc + j + x - 1];
-             */
+                
+            //for (y = 0; y < 3; y++)
+            //    for (x = 0; x < 3; x++)
+            //        vetor[cont++] = I[(i + y - 1) * nc + j + x - 1];
 
-            //ordena o vetor
-            for (k = 0; k < MAX - 1; k++) {
+            //ordenacao do vetor
+            for (k = 0; k < MAX - 1; k++)
                 for (m = k + 1; m < MAX; m++)
                     if (vetor[k] > vetor[m]) {
                         aux = vetor[k];
                         vetor[k] = vetor[m];
                         vetor[m] = aux;
                     }
-            }
+            
             //o ponto processado recebe o ponto médio do vetor
             O[i * nc + j] = vetor[CENTRO];
         }
@@ -235,9 +232,9 @@ void calculaHistograma(imagem I, histograma H, int nl, int nc, int mn) {
         H[i] = 0;
 
     for (i = 0; i < nl; i++)
-        for (j = 0; j < nc; j++) {
+        for (j = 0; j < nc; j++)
             H[I[i * nc + j]]++;
-        }
+        
 }
 
 void equalizaHistograma(imagem I, imagem O, histograma H, int nl, int nc, int mn) {
@@ -253,14 +250,13 @@ void equalizaHistograma(imagem I, imagem O, histograma H, int nl, int nc, int mn
         }
     }
     //multiplica pelo maior tom de cor
-    for (i = 0; i < MAX; i++) {
+    for (i = 0; i < MAX; i++)
         pf[i] *= mn;
-    }
-    for (i = 0; i < nl; i++) {
-        for (j = 0; j < nc; j++) {
+    
+    for (i = 0; i < nl; i++)
+        for (j = 0; j < nc; j++)
             O[i * nc + j] = (int) pf[I[i * nc + j]];
-        }
-    }
+        
 }
 
 void dilatacao(imagem I, imagem O, int nl, int nc, int mn) {
@@ -291,10 +287,8 @@ void dilatacao2(imagem I, imagem O, int nl, int nc, int mn) {
         for (j = 1; j < nc - 1; j++) {
             int k, max = -1;
             for (k = 0; k < 4; k++) {
-                if (max < I[(i + viz[k].x) * nc + j + viz[k].y]) {
+                if (max < I[(i + viz[k].x) * nc + j + viz[k].y])
                     max = I[(i + viz[k].x) * nc + j + viz[k].y];
-                }
-            }
             O[i * nc + j] = max;
         }
 }
@@ -306,9 +300,8 @@ void erosao(imagem I, imagem O, int nl, int nc, int mn) {
             int y, x, min = mn + 1;
             for (y = -1; y < 2; y++)
                 for (x = -1; x < 2; x++)
-                    if (min > I[(i + y) * nc + j + x]) {
+                    if (min > I[(i + y) * nc + j + x])
                         min = I[(i + y) * nc + j + x];
-                    }
             O[i * nc + j] = min;
         }
 }
@@ -320,12 +313,11 @@ void gradiente(imagem I, imagem O, int nl, int nc, int mn) {
             int y, x, min = mn + 1, max = -1;
             for (y = -1; y < 2; y++)
                 for (x = -1; x < 2; x++) {
-                    if (min > I[(i + y) * nc + j + x]) {
+                    if (min > I[(i + y) * nc + j + x])
                         min = I[(i + y) * nc + j + x];
-                    }
-                    if (max < I[(i + y) * nc + j + x]) {
+                    if (max < I[(i + y) * nc + j + x])
                         max = I[(i + y) * nc + j + x];
-                    }
+                    
                 }
             int dif = max - min;
             O[i * nc + j] = dif;
