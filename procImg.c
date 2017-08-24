@@ -211,7 +211,7 @@ void mediana(imagem I, imagem O, int nl, int nc) {
             //for (y = 0; y < 3; y++)
             //    for (x = 0; x < 3; x++)
             //        vetor[cont++] = I[(i + y - 1) * nc + j + x - 1];
-
+            
             //ordenacao do vetor
             for (k = 0; k < MAX - 1; k++)
                 for (m = k + 1; m < MAX; m++)
@@ -220,7 +220,6 @@ void mediana(imagem I, imagem O, int nl, int nc) {
                         vetor[k] = vetor[m];
                         vetor[m] = aux;
                     }
-            
             //o ponto processado recebe o ponto médio do vetor
             O[i * nc + j] = vetor[CENTRO];
         }
@@ -230,7 +229,7 @@ void calculaHistograma(imagem I, histograma H, int nl, int nc, int mn) {
     int i, j;
     for (i = 0; i < mn + 1; i++)
         H[i] = 0;
-
+    
     for (i = 0; i < nl; i++)
         for (j = 0; j < nc; j++)
             H[I[i * nc + j]]++;
@@ -275,14 +274,10 @@ void dilatacao(imagem I, imagem O, int nl, int nc, int mn) {
 
 void dilatacao2(imagem I, imagem O, int nl, int nc, int mn) {
     int i, j;
-
     struct {
         int x, y;
-    } viz[4] = {
-        {-2, 0},
-        {-1, 0},
-        {1, 0},
-        {2, 0}};
+    } viz[4] = { {-2, 0}, {-1, 0}, {1, 0}, {2, 0}};
+    
     for (i = 1; i < nl - 1; i++)
         for (j = 1; j < nc - 1; j++) {
             int k, max = -1;
