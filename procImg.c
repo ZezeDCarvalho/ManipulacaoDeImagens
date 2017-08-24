@@ -220,7 +220,6 @@ void mediana(imagem I, imagem O, int nl, int nc) {
                         vetor[k] = vetor[m];
                         vetor[m] = aux;
                     }
-            
             //o ponto processado recebe o ponto médio do vetor
             O[i * nc + j] = vetor[CENTRO];
         }
