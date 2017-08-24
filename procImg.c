@@ -286,7 +286,7 @@ void dilatacao2(imagem I, imagem O, int nl, int nc, int mn) {
     for (i = 1; i < nl - 1; i++)
         for (j = 1; j < nc - 1; j++) {
             int k, max = -1;
-            for (k = 0; k < 4; k++) {
+            for (k = 0; k < 4; k++)
                 if (max < I[(i + viz[k].x) * nc + j + viz[k].y])
                     max = I[(i + viz[k].x) * nc + j + viz[k].y];
             O[i * nc + j] = max;
