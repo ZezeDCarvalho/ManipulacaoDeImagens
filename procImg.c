@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------------+
  | PROCESSAMENTO DE IMAGEM -                                               |
- | -----------------------                                                 |
+ |--------------------------                                               |
  | Programa para processamento de uma imagem em niveis de cinza.           |
  | Criado:.....  Luiz Eduardo da Silva                                     |
  | Manipulado:.  Maria José Silva de Carvalho                              |
