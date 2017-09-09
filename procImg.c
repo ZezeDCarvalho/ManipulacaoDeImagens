@@ -1,12 +1,12 @@
-/*+-------------------------------------------------------------------------+
-  | PROCESSAMENTO DE IMAGEM -                                               |
-  | -----------------------                                                 |
-  | Programa para processamento de uma imagem em niveis de cinza.           |
-  | Criado:.....  Luiz Eduardo da Silva                                     |
-  | Manipulado:.  Maria José Silva de Carvalho                              |
-  |             funções criadas (gradiente, erosao, dilatacao2, dilatacao,  |
-  |             equalizaHistograma, calculaHistograma, mediana, convolucao) |
-  +-------------------------------------------------------------------------+*/
+/*-------------------------------------------------------------------------+
+ | PROCESSAMENTO DE IMAGEM -                                               |
+ | -----------------------                                                 |
+ | Programa para processamento de uma imagem em niveis de cinza.           |
+ | Criado:.....  Luiz Eduardo da Silva                                     |
+ | Manipulado:.  Maria José Silva de Carvalho                              |
+ |             funções criadas (gradiente, erosao, dilatacao2, dilatacao,  |
+ |             equalizaHistograma, calculaHistograma, mediana, convolucao) |
+ +-------------------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <string.h>
@@ -20,14 +20,14 @@
 typedef int * imagem;
 typedef int histograma [256];
 
-/*+-------------------------------------------------------------------------+
-  | Rotinas para ALOCAR e DESALOCAR dinamicamente espaco de memoria para um |
-  | vetor monodimensional que armazenara a imagem.                          |
-  | PARAMETROS:                                                             |
-  | I  = Endereco do vetor (ponteiro de inteiros).                          |
-  | nl = Numero de linhas.                                                  |
-  | nc = Numero de colunas.                                                 |
-  +-------------------------------------------------------------------------+*/
+/*-------------------------------------------------------------------------+
+ | Rotinas para ALOCAR e DESALOCAR dinamicamente espaco de memoria para um |
+ | vetor monodimensional que armazenara a imagem.                          |
+ | PARAMETROS:                                                             |
+ | I  = Endereco do vetor (ponteiro de inteiros).                          |
+ | nl = Numero de linhas.                                                  |
+ | nc = Numero de colunas.                                                 |
+ +-------------------------------------------------------------------------*/
 int aloca_memo(imagem *I, int nl, int nc) {
     *I = (int *) malloc(nl * nc * sizeof (int));
     if (*I) return TRUE;
@@ -38,14 +38,14 @@ int desaloca_memo(imagem *I) {
     free(*I);
 }
 
-/*+-------------------------------------------------------------------------+
-  | Apresenta informacoes sobre um arquivo de imagem.                       |
-  | PARAMETROS:                                                             |
-  |     nome = nome fisico do arquivo de imagem.                            |
-  |     nl   = numero de linhas da imagem.                                  |
-  |     nc   = numero de colunas da imagem.                                 |
-  |     mn   = maximo nivel de cinza da imagem.                             |
-  +-------------------------------------------------------------------------+*/
+/*-------------------------------------------------------------------------+
+ | Apresenta informacoes sobre um arquivo de imagem.                       |
+ | PARAMETROS:                                                             |
+ |     nome = nome fisico do arquivo de imagem.                            |
+ |     nl   = numero de linhas da imagem.                                  |
+ |     nc   = numero de colunas da imagem.                                 |
+ |     mn   = maximo nivel de cinza da imagem.                             |
+ +-------------------------------------------------------------------------*/
 void info_imagem(char *nome, int nl, int nc, int mn) {
     printf("\nINFORMACOES SOBRE A IMAGEM:");
     printf("\n--------------------------\n");
@@ -55,32 +55,32 @@ void info_imagem(char *nome, int nl, int nc, int mn) {
     printf("Maximo nivel-de-cinza/cores.: %d \n\n", mn);
 }
 
-/*+-------------------------------------------------------------------------+
-  | Rotina que faz a leitura de uma imagem em formato .PGM ASCII e armazena |
-  | num vetor monodimensional. Um exemplo de imagem .PGM ASCII gravada neste|
-  | formato:                                                                |
-  |                                                                         |
-  | P2                                                                      |
-  | # CREATOR: XV Version 3.10a  Rev: 12/29/94                              |
-  | 124 122                                                                 |
-  | 255                                                                     |
-  | 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255     |
-  | 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255     |
-  | (...)                                                                   |
-  |                                                                         |
-  | Lin 1: contem P2, o que identifica este arquivo como PGM ASCII.         |
-  | Lin 2: contem um comentario qualquer iniciado com #.                    |
-  | Lin 3: numero de colunas e numero de linhas da imagem.                  |
-  | Lin 4: maximo nivel de cinza na imagem (255 normalmente).               |
-  | Lin 5 em diante: valores de cinza da imagem.                            |
-  |                                                                         |
-  | PARAMETROS:                                                             |
-  |     nome = nome do arquivo (entra).                                     |
-  |     I    = ponteiro para o vetor imagem (retorna).                      |
-  |     nl   = numero de linhas da imagem (retorna).                        |
-  |     nc   = numero de colunas da imagem (retorna).                       |
-  |     mn   = maximo nivel de cinza (retorna).                             |
-  +-------------------------------------------------------------------------+*/
+/*--------------------------------------------------------------------------+
+ | Rotina que faz a leitura de uma imagem em formato .PGM ASCII e armazena  |
+ | num vetor monodimensional. Um exemplo de imagem .PGM ASCII gravada neste |
+ | formato:                                                                 |
+ |                                                                          |
+ | P2                                                                       |
+ | # CREATOR: XV Version 3.10a  Rev: 12/29/94                               |
+ | 124 122                                                                  |
+ | 255                                                                      |
+ | 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255      |
+ | 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255      |
+ | (...)                                                                    |
+ |                                                                          |
+ | Lin 1: contem P2, o que identifica este arquivo como PGM ASCII.          |
+ | Lin 2: contem um comentario qualquer iniciado com #.                     |
+ | Lin 3: numero de colunas e numero de linhas da imagem.                   |
+ | Lin 4: maximo nivel de cinza na imagem (255 normalmente).                |
+ | Lin 5 em diante: valores de cinza da imagem.                             |
+ |                                                                          |
+ | PARAMETROS:                                                              |
+ |     nome = nome do arquivo (entra).                                      |
+ |     I    = ponteiro para o vetor imagem (retorna).                       |
+ |     nl   = numero de linhas da imagem (retorna).                         |
+ |     nc   = numero de colunas da imagem (retorna).                        |
+ |     mn   = maximo nivel de cinza (retorna).                              |
+ +--------------------------------------------------------------------------*/
 int le_imagem_pgm(char *nome, imagem *I, int *nl, int *nc, int *mn) {
     int i, j, k, LIMX, LIMY, MAX_NIVEL;
     char c, LINHA[100];
@@ -132,15 +132,15 @@ int le_imagem_pgm(char *nome, imagem *I, int *nl, int *nc, int *mn) {
     return TRUE;
 }
 
-/*+-------------------------------------------------------------------------+
-  | Rotina que grava o arquivo da imagem em formato PGM ASCII.              |
-  | PARAMETROS:                                                             |
-  |     I    = ponteiro para o vetor imagem (entra).                        |
-  |     nome = nome do arquivo (entra).                                     |
-  |     nl   = numero de linhas (entra).                                    |
-  |     nc   = numero de colunas (entra).                                   |
-  |     mn   = maximo nivel de cinza (entra).                               |
-  +-------------------------------------------------------------------------+*/
+/*--------------------------------------------------------------------------+
+ | Rotina que grava o arquivo da imagem em formato PGM ASCII.               |
+ | PARAMETROS:                                                              |
+ |     I    = ponteiro para o vetor imagem (entra).                         |
+ |     nome = nome do arquivo (entra).                                      |
+ |     nl   = numero de linhas (entra).                                     |
+ |     nc   = numero de colunas (entra).                                    |
+ |     mn   = maximo nivel de cinza (entra).                                |
+ +--------------------------------------------------------------------------*/
 void grava_imagem_pgm(imagem I, char *nome, int nl, int nc, int mn) {
     int i, j, x, k, valores_por_linha;
     FILE *arq;
@@ -233,8 +233,7 @@ void calculaHistograma(imagem I, histograma H, int nl, int nc, int mn) {
     for (i = 0; i < nl; i++)
         for (j = 0; j < nc; j++)
             H[I[i * nc + j]]++;
-        
-}
+}        
 
 void equalizaHistograma(imagem I, imagem O, histograma H, int nl, int nc, int mn) {
     int i, j, MAX = mn + 1;
@@ -255,7 +254,6 @@ void equalizaHistograma(imagem I, imagem O, histograma H, int nl, int nc, int mn
     for (i = 0; i < nl; i++)
         for (j = 0; j < nc; j++)
             O[i * nc + j] = (int) pf[I[i * nc + j]];
-        
 }
 
 void dilatacao(imagem I, imagem O, int nl, int nc, int mn) {
@@ -318,9 +316,9 @@ void gradiente(imagem I, imagem O, int nl, int nc, int mn) {
         }
 }
 
-/*+------------------------------------------------------+
-  |        P R O G R A M A    P R I N C I P A L          |
-  +------------------------------------------------------+*/
+/*------------------------------------------------------+
+ |        P R O G R A M A    P R I N C I P A L          |
+ +------------------------------------------------------*/
 int main(int argc, char *argv[]) {
     int OK, nc, nl, mn, i, j, maior;
     char nome[100];
